@@ -27,6 +27,7 @@ describe('Live Node Chat Server', function() {
 
   it('Should send an object containing a `results` array', function(done) {
     request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+    console.log("response--->", response);
       parsedBody = JSON.parse(body);
       expect(parsedBody).to.be.an('object');
       expect(parsedBody.results).to.be.an('array');
@@ -41,7 +42,6 @@ describe('Live Node Chat Server', function() {
         username: 'Jono',
         message: 'Do my bidding!'}
     };
-
     request(requestParams, function(error, response, body) {
       expect(response.statusCode).to.equal(201);
       done();
@@ -60,11 +60,13 @@ describe('Live Node Chat Server', function() {
       // Now if we request the log, that message we posted should be there:
       request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
           var messages = JSON.parse(body).results;
+          console.log("messages from spec: ", messages);
           expect(messages[0].username).to.equal('Jono');
           expect(messages[0].message).to.equal('Do my bidding!');
           done();
         });
     });
+
   });
 
   it('Should 404 when asked for a nonexistent file', function(done) {
