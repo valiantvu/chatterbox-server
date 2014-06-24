@@ -4,7 +4,7 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
-// var fs = require('fs');
+var fs = require('fs');
 var obj = {};
 obj.results = [];
 
@@ -29,9 +29,10 @@ exports.handler = function(request, response) {
 
     statusCode = 200;
     response.writeHead(statusCode, headers);
-    // var readMessages = fs.readFileSync('messages.txt');
-    response.end(JSON.stringify(obj));
-    // response.end(readMessages);
+    var readMessages = fs.readFileSync('messages.txt');
+    // response.end(JSON.stringify(obj));
+    console.log(JSON.parse(readMessages));
+    response.end(JSON.stringify(JSON.parse(readMessages)));
 
   } else if(request.method == "POST" && urlArray[1] === 'classes') {
 
@@ -41,11 +42,10 @@ exports.handler = function(request, response) {
       //*** without parse, console result is :<Buffer 7b 22 .....7d>
       //*** if chunk.toString() console result is : {"username":"Jono","message":"Do my bidding!"}
       //*** if JSON.parse(chunk) console result is object {username: "Jono", message: "Do my didding!"}
-      // obj.results.push(JSON.parse(chunk));
-      obj.results.push(JSON.parse(chunk));
+      obj.results.unshift(JSON.parse(chunk));
       var msg = JSON.stringify(obj);
-      console.log(msg);
-      // fs.writeFileSync('messages.txt', msg);
+      // console.log(msg);
+      fs.writeFileSync('messages.txt', msg);
       response.end(msg);//***still works fine if I move this line down
     });
 

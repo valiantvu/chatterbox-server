@@ -48,7 +48,7 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      // data: query,
+      data: query,
       success: function(data){
         console.dir(data.results);
         callback(data.results);
