@@ -10,15 +10,14 @@ exports.handler = function(request, response) {
 
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
-  var body = {};
-  body.results = [];
-  var str = "";
+  var obj = {};
+  obj.results = [];
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
   var headers = defaultCorsHeaders;
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = "application/json";//******changed from plain text to json
   var statusCode;
   var urlArray = request.url.split('/');
 
@@ -26,31 +25,21 @@ exports.handler = function(request, response) {
 
     statusCode = 200;
     response.writeHead(statusCode, headers);
-    response.end(JSON.stringify(body));
+    response.end(JSON.stringify(obj));
 
   } else if(request.method == "POST" && urlArray[1] === 'classes') {
 
     statusCode = 201;
     response.writeHead(statusCode, headers);
 
-    request.addListener('data', function(chunk){
-      body.results.push(JSON.parse(chunk));
-      console.log(body.results);
-      response.end(JSON.stringify(body));
+    request.on('data', function(chunk){
+      //*** without parse, console result is :<Buffer 7b 22 .....7d>
+      //*** if chunk.toString() console result is : {"username":"Jono","message":"Do my bidding!"}
+      //*** if JSON.parse(chunk) console result is object {username: "Jono", message: "Do my didding!"}
+      obj.results.push(JSON.parse(chunk));
+      console.log(JSON.stringify(obj));
     });
-
-    // request.on('data', function(chunk){
-    //   body.results.push(JSON.parse(chunk));
-    //   console.log(body.results);
-    //   response.end(JSON.stringify(JSON.parse(chunk)));
-    // }, this);
-
-    // request.on("data", function(chunk){
-    //   console.log(chunk)
-    //   str += chunk;
-    //   console.log("str-------->",str);
-    //   response.end(body.results.push(str));
-    // });
+    response.end(obj);//***still works fine if I move this line down
 
   } else {
 
