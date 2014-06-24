@@ -1,5 +1,5 @@
 var app = {
-  server: 'http://127.0.0.1:3000/',
+  server: 'http://127.0.0.1:3000/classes/messages',
   username: '',
   currentRoom: 'black hole',
   friends: {},
@@ -48,7 +48,7 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      data: query,
+      // data: query,
       success: function(data){
         console.dir(data.results);
         callback(data.results);
