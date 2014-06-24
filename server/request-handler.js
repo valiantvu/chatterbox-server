@@ -4,32 +4,65 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
-
-var handleRequest = function(request, response) {
+exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
-
+  var body = {};
+  body.results = [];
+  var str = "";
   console.log("Serving request type " + request.method + " for url " + request.url);
-
-  var statusCode = 200;
 
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
   var headers = defaultCorsHeaders;
-
   headers['Content-Type'] = "text/plain";
+  var statusCode;
+  var urlArray = request.url.split('/');
 
-  /* .writeHead() tells our server what HTTP status code to send back */
-  response.writeHead(statusCode, headers);
+  if (request.method == "GET" && urlArray[1] === 'classes') {
 
+    statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(body));
+
+  } else if(request.method == "POST" && urlArray[1] === 'classes') {
+
+    statusCode = 201;
+    response.writeHead(statusCode, headers);
+
+    request.addListener('data', function(chunk){
+      body.results.push(JSON.parse(chunk));
+      console.log(body.results);
+      response.end(JSON.stringify(body));
+    });
+
+    // request.on('data', function(chunk){
+    //   body.results.push(JSON.parse(chunk));
+    //   console.log(body.results);
+    //   response.end(JSON.stringify(JSON.parse(chunk)));
+    // }, this);
+
+    // request.on("data", function(chunk){
+    //   console.log(chunk)
+    //   str += chunk;
+    //   console.log("str-------->",str);
+    //   response.end(body.results.push(str));
+    // });
+
+  } else {
+
+    statusCode = 404;
+    response.writeHead(statusCode, headers);
+    response.end("yolo");
+
+  }
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-  response.end("Hello, World!");
 };
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
