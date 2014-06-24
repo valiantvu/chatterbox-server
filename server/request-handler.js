@@ -4,14 +4,17 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
+var fs = require('fs');
+var obj = {};
+obj.results = [];
 exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
-  var obj = {};
-  obj.results = [];
+
+
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   /* Without this line, this server wouldn't work. See the note
@@ -25,21 +28,25 @@ exports.handler = function(request, response) {
 
     statusCode = 200;
     response.writeHead(statusCode, headers);
+    // var readMessages = fs.readFileSync('messages.txt');
     response.end(JSON.stringify(obj));
+    // response.end(readMessages);
 
   } else if(request.method == "POST" && urlArray[1] === 'classes') {
 
-    statusCode = 201;
-    response.writeHead(statusCode, headers);
-
     request.on('data', function(chunk){
+      statusCode = 201;
+      response.writeHead(statusCode, headers);
       //*** without parse, console result is :<Buffer 7b 22 .....7d>
       //*** if chunk.toString() console result is : {"username":"Jono","message":"Do my bidding!"}
       //*** if JSON.parse(chunk) console result is object {username: "Jono", message: "Do my didding!"}
+      // obj.results.push(JSON.parse(chunk));
       obj.results.push(JSON.parse(chunk));
-      console.log(JSON.stringify(obj));
+      var msg = JSON.stringify(obj);
+      console.log(msg);
+      // fs.writeFileSync('messages.txt', msg);
+      response.end(msg);//***still works fine if I move this line down
     });
-    response.end(obj);//***still works fine if I move this line down
 
   } else {
 
