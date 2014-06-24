@@ -4,9 +4,10 @@
  * You'll have to figure out a way to export this function from
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
-var fs = require('fs');
+// var fs = require('fs');
 var obj = {};
 obj.results = [];
+
 exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
@@ -48,6 +49,10 @@ exports.handler = function(request, response) {
       response.end(msg);//***still works fine if I move this line down
     });
 
+  } else if ( request.method == "OPTIONS") {
+    statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end();
   } else {
 
     statusCode = 404;
