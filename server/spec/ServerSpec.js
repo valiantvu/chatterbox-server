@@ -98,8 +98,8 @@ it('Should respond with messages that were previously posted', function() {
 
     expect(res._responseCode).to.equal(200);
     var messages = JSON.parse(res._data).results;
-    console.log("res-->",res);
-    console.log("message-->",messages);
+    // console.log("res-->",res);
+    // console.log("message-->",messages);
     // console.log();
     expect(messages.length).to.be.above(0);
     expect(messages[0].username).to.equal('Jono');

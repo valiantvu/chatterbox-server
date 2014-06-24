@@ -28,7 +28,7 @@ describe('Live Node Chat Server', function() {
   it('Should send an object containing a `results` array', function(done) {
     request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
       parsedBody = JSON.parse(body);
-      console.log("parsedBody is :", parsedBody);
+      // console.log("parsedBody is :", parsedBody);
       expect(parsedBody).to.be.an('object');
       expect(parsedBody.results).to.be.an('array');
       done();
@@ -43,7 +43,7 @@ describe('Live Node Chat Server', function() {
         message: 'Do my bidding!'}
     };
     request(requestParams, function(error, response, body) {
-      console.log('response',response)
+      // console.log('response',response)
       expect(response.statusCode).to.equal(201);
       done();
     });
@@ -63,7 +63,7 @@ describe('Live Node Chat Server', function() {
       request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
           //console.log("what is response,", response);
           var messages = JSON.parse(body).results;
-          console.log("messages from spec: ", messages);
+          // console.log("messages from spec: ", body);
           expect(messages[0].username).to.equal('Jono');
           expect(messages[0].message).to.equal('Do my bidding!');
           done();
