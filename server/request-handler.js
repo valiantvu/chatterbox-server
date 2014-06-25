@@ -6,7 +6,9 @@
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 var fs = require('fs');
 var obj = {};
-obj.results = [];
+// obj.results = [];
+obj.results = JSON.parse(fs.readFileSync('messages.txt')).results;
+// console.log(fs.readFileSync('messages.txt'));
 
 exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
@@ -31,7 +33,7 @@ exports.handler = function(request, response) {
     response.writeHead(statusCode, headers);
     var readMessages = fs.readFileSync('messages.txt');
     // response.end(JSON.stringify(obj));
-    console.log(JSON.parse(readMessages));
+    // console.log(JSON.parse(readMessages));
     response.end(JSON.stringify(JSON.parse(readMessages)));
 
   } else if(request.method == "POST" && urlArray[1] === 'classes') {
