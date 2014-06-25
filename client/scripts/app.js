@@ -1,5 +1,6 @@
 var app = {
-  server: 'http://127.0.0.1:3000/classes/messages',
+  server: 'http://blackholechatterbox.azurewebsites.net/classes/messages',
+  // server: 'http://127.0.0.1:3000/classes/messages',
   username: '',
   currentRoom: 'black hole',
   friends: {},
